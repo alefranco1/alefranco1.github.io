@@ -2,7 +2,7 @@ let listMin = 0;
 let listMax = 5;
 let pageIndex = 1;
 
-let json = (name) => {
+let streamData = (name) => {
     return fetch(`https://api.twitch.tv/kraken/search/streams?query=${name}&limit=${55}`, {
         method: 'GET', 
         mode: 'cors', 
@@ -21,7 +21,7 @@ let json = (name) => {
 
 let onSearch = (func) => {
     let gameName = document.getElementById("searchbar").value;
-    json(gameName).then((parsedJson) => {
+    streamData(gameName).then((parsedJson) => {
         let total = parsedJson._total
         let list = parsedJson.streams.map((element)=> {
             return {
