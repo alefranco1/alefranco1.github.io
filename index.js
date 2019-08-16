@@ -39,6 +39,13 @@ let onSearch = (func) => {
 };
 
 let listFive = (min, max, func) => {
+    document.getElementById("pagination").style.display = 'block';
+    let pages = document.getElementById("pages")
+    pages.innerHTML = `
+    <i class="left" onClick= "onPrevious()"></i>
+    <span>${pageIndex}/10</span>
+    <i class="right" onClick= "onNext()"></i> 
+    `
     let table = document.getElementById("table");
     while (table.firstChild) {
     table.removeChild(table.firstChild);
