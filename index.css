@@ -1,26 +1,14 @@
 #app{
     width: 650px;
-    /* border: 1px;
-    border-style: solid; 
-    border-color: black; 
-    height:600px;
-    margin: 0 auto;  */
 }
 
 #search {
     padding-left: 20px;
-    border: 1px;
-    border-style: solid; 
-    border-color: black;
     height: 15%;
+    padding: 5px 10px 5px 10px;
 }
 #searchbar {
     margin-top: 45px;
-}
-
-
-.listing{
-    border: 1px solid black;
 }
 
 #pagination {
