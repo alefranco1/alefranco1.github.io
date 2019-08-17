@@ -104,7 +104,7 @@ let maxTenPages = (func) => {
     if (func[0]["total"] >= 50) {
         return 10;
     } else {
-        gameTotal = Math.round(func[0]["total"])/5;
-        return Math.round(func[0]["total"]/10);
+        gameTotal = Math.round(func[0]["total"]/10)*10;
+        return gameTotal/5;
     };
 };
