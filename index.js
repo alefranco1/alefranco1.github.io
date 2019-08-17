@@ -1,29 +1,28 @@
-let listMin = 0;
-let listMax = 5;
-let pageIndex = 1;
-
-let streamData = (name) => {
+let listMin;
+let listMax;
+let pageIndex;
+let gameTotal;
+let fetchData = (name) => {
     return fetch(`https://api.twitch.tv/kraken/search/streams?query=${name}&limit=${55}`, {
         method: 'GET', 
         mode: 'cors', 
         cache: 'no-cache', 
         credentials: 'same-origin', 
         headers: {
-            'Client-ID': APIKEY,
+            'Client-ID': '12bgxpg3az1scw63pmtfporsbz5ab9',
             'Accept': 'application/vnd.twitchtv.v5+json'
         },
         redirect: 'follow', 
         referrer: 'no-referrer', 
     })
     .then(response => response.json())
-    .catch(error => console.error(error))
+    .catch(error => console.error(error));
 };
-
-let onSearch = (func) => {
+let streamData = (func) => {
     let gameName = document.getElementById("searchbar").value;
-    streamData(gameName).then((parsedJson) => {
+    fetchData(gameName).then((parsedJson) => {
         let total = parsedJson._total
-        let list = parsedJson.streams.map((element)=> {
+        let list = parsedJson.streams.map((element) => {
             return {
                 description: element.channel.description,
                 displayName: element.channel.display_name, 
@@ -37,19 +36,28 @@ let onSearch = (func) => {
         func(listMin, listMax, list);
     });
 };
-
+let onSearch = (func) => {
+    listMin = 0;
+    listMax = 5;
+    pageIndex = 1;
+    gameTotal = 50;
+    document.getElementById("pagination").style.display = 'none';
+    streamData(func);
+};
 let listFive = (min, max, func) => {
     document.getElementById("pagination").style.display = 'block';
-    let pages = document.getElementById("pages")
+    let total = document.getElementById("total");
+    let pages = document.getElementById("pages");
     pages.innerHTML = `
     <i class="left" onClick= "onPrevious()"></i>
-    <span>${pageIndex}/10</span>
+    <span>${pageIndex}/${maxTenPages(func)}</span>
     <i class="right" onClick= "onNext()"></i> 
     `
+    total.innerHTML = `Total results: ${func[0]["total"]}`
     let table = document.getElementById("table");
     while (table.firstChild) {
-    table.removeChild(table.firstChild);
-    }
+        table.removeChild(table.firstChild);
+    };
     for (let i = min; i < max; i++) {
         let row = document.createElement("div");
         row.setAttribute("class", "row");
@@ -74,24 +82,29 @@ let listFive = (min, max, func) => {
           `
         row.appendChild(secondColumn);
         table.appendChild(row);
-    }
+    };
 };
-
 let onNext = () => {
-    if(listMax !== 50) {
+    if (listMax !== gameTotal) {
         listMin = listMax;
         listMax += 5;
-        onSearch(listFive);
+        streamData(listFive);
         pageIndex++
-    };
-    
+    };   
 };
-
 let onPrevious = () => {
     if (listMin !== 0) {
         listMax -= 5;
         listMin -= 5;
-        onSearch(listFive);
+        streamData(listFive);
         pageIndex--
+    };
+};
+let maxTenPages = (func) => {
+    if (func[0]["total"] >= 50) {
+        return 10;
+    } else {
+        gameTotal = Math.round(func[0]["total"])/5;
+        return Math.round(func[0]["total"]/10);
     };
 };
